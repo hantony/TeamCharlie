@@ -25,7 +25,6 @@ public class User {
 
 	public User(String name, String role, String cardId, String status) {
 		super();
-//		this.id = id;
 		this.name = name;
 		this.role = role;
 		this.cardId = cardId;
@@ -77,9 +76,6 @@ public class User {
 		return "User [id=" + id + ", name=" + name + ", role=" + role + ", cardId=" + cardId + ", status=" + status
 				+ "]";
 	}
-	
-	
-    
  
 }
 
