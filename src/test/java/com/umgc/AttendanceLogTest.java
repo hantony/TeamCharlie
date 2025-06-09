@@ -74,10 +74,10 @@ public class AttendanceLogTest {
 	@Test
 	void testFindAll() {
 
-		// find all Users and return List<User>
-		ParameterizedTypeReference<List<User>> typeRef = new ParameterizedTypeReference<>() {
+		// find all Log Entries and return List<AttendanceLog>
+		ParameterizedTypeReference<List<AttendanceLog>> typeRef = new ParameterizedTypeReference<>() {
 		};
-		ResponseEntity<List<User>> response = restTemplate.exchange(BASEURI + "/Log", HttpMethod.GET, null, typeRef);
+		ResponseEntity<List<AttendanceLog>> response = restTemplate.exchange(BASEURI + "/Log", HttpMethod.GET, null, typeRef);
 
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 		assertEquals(4, response.getBody().size());
