@@ -1,0 +1,38 @@
+Getting Started with Spring Boot 
+----------------------------------
+
+Entity Classes
+
+- are the most fundamental primitives around which controllers, services and repositories are built
+- most notable, the Entity classes container annotations.  Annotations are high-level directives that
+	the Spring framework uses, to conduct operations which normally would have to be scripted. A prime
+	example is the generation of the database schema, without actually writing a schema script.  In 
+	this way, the code is always 100% in sync with the database design.  During development, a new
+	database is generated off of the Entity classes, each and every time the application and/or
+	test cases are run.  For our project, so far, the entity classes include:
+
+
+		src/main/java/com/umgc/attendancelog/AttendanceLog.java
+
+		src/main/java/com/umgc/user/User.java
+Repository
+
+	Moving up one level, the repositories use the entity classes to shuttle info in and out of the database.
+	The CRUD ( Create, Read, Update, Delete ) are baked into the Repository, it also allow custom queries to be
+	written at this level.
+
+Services
+
+	It is at the level, "business code" is written - orchestration of the underlying Repository as database 
+		primitives. 
+
+Controller
+
+	This level introduces Restful services.  Once instrumented, "curl" commands can be used to access the database
+		through HTTP.
+	Also, the Junit Tests exercise this functionality:
+
+	src/test/java/com/umgc/AttendanceLogTest.java
+	src/test/java/com/umgc/UserControllerTest.java
+
+
