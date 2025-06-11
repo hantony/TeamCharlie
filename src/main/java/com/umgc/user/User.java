@@ -76,6 +76,9 @@ public class User {
 		return "User [id=" + id + ", name=" + name + ", role=" + role + ", cardId=" + cardId + ", status=" + status
 				+ "]";
 	}
+
+	
+
  
 }
 

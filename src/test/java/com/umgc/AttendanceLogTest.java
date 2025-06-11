@@ -1,8 +1,13 @@
 package com.umgc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +29,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.umgc.attendancelog.AttendanceLog;
 import com.umgc.attendancelog.AttendanceLogRepository;
-import com.umgc.user.User;
 
 /**
  * Testing with TestRestTemplate and @Testcontainers (image mysql:8.0-debian)
@@ -49,10 +53,10 @@ public class AttendanceLogTest {
 	@Autowired
 	AttendanceLogRepository attendanceLogRepository;
 
-	// static, all tests share this postgres container
+	// static, all tests share this mysql container
 	@Container
 	@ServiceConnection
-	static MySQLContainer<?> postgres = new MySQLContainer<>("mysql:8.0-debian");
+	static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0-debian");
 
 	@BeforeEach
 	void testSetUp() {
@@ -61,12 +65,17 @@ public class AttendanceLogTest {
 
 		attendanceLogRepository.deleteAll();
 		
-	//	public AttendanceLog(Long id, String userId, String entryTime, String entryType, String location) {
-
-		AttendanceLog newLogAAA = new AttendanceLog("userIdA", "entryTimeA", "entryTypeA", "locationA");
-		AttendanceLog newLogBBB = new AttendanceLog("userIdB", "entryTimeB", "entryTypeB", "locationB");
-		AttendanceLog newLogCCC = new AttendanceLog("userIdC", "entryTimeC", "entryTypeC", "locationC");
-		AttendanceLog newLogDDD = new AttendanceLog("userIdD", "entryTimeD", "entryTypeD", "locationD");
+		Date date = new Date();
+		
+		Long userId1 = Long.valueOf(1);
+		Long userId2 = Long.valueOf(2);
+		Long userId3 = Long.valueOf(3);
+		Long userId4 = Long.valueOf(4);
+		
+		AttendanceLog newLogAAA = new AttendanceLog(userId1, date.getTime(), "entryTypeA", "locationA");
+		AttendanceLog newLogBBB = new AttendanceLog(userId2, date.getTime()+1, "entryTypeB", "locationB");
+		AttendanceLog newLogCCC = new AttendanceLog(userId3, date.getTime()+2, "entryTypeC", "locationC");
+		AttendanceLog newLogDDD = new AttendanceLog(userId4, date.getTime()+3, "entryTypeD", "locationD");
 		
 		attendanceLogRepository.saveAll(List.of(newLogAAA, newLogBBB, newLogCCC, newLogDDD));
 	}
@@ -88,10 +97,13 @@ public class AttendanceLogTest {
 	public void testCreate() {
 
 		// Create a new Log Entry EEE
-		AttendanceLog newLogEEE = new AttendanceLog("userIdE", "entryTimeE", "entryTypeE", "locationE");
+		Date date = new Date();
+		Long userId5 = Long.valueOf(5);
+		
+		AttendanceLog newLog = new AttendanceLog(userId5, date.getTime(), "entryTypeE", "locationE");
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json");
-		HttpEntity<AttendanceLog> request = new HttpEntity<>(newLogEEE, headers);
+		HttpEntity<AttendanceLog> request = new HttpEntity<>(newLog, headers);
 
 		// test POST save
 		ResponseEntity<AttendanceLog> responseEntity = restTemplate.postForEntity(BASEURI + "/Log", request, AttendanceLog.class);
@@ -99,15 +111,37 @@ public class AttendanceLogTest {
 		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 
 		// find User EEE
-		List<AttendanceLog> list = attendanceLogRepository.findByUserId("userIdE");
+		List<AttendanceLog> list = attendanceLogRepository.findByUserId(userId5);
 
 		// Test User EEE details
-		AttendanceLog log = list.get(0);
-		assertEquals("userIdE", log.getUserId());
-		assertEquals("entryTimeE", log.getEntryTime());
-		assertEquals("entryTypeE", log.getEntryType());
-		assertEquals("locationE", log.getLocation());
+		AttendanceLog alog = list.get(0);
+		assertEquals(5L, alog.getUserId());
+		assertTrue(alog.getEntryTime() > 1000 );
+		assertEquals("entryTypeE", alog.getEntryType());
+		assertEquals("locationE", alog.getLocation());
 
+	}
+	
+	@Test
+	public void testDeleteById() {
+
+		// Create a new User EEE
+		Date date = new Date();
+		Long userId6 = Long.valueOf(6);
+		AttendanceLog newLog = new AttendanceLog(userId6, date.getTime(), "entryTypeE", "locationE");
+		
+		attendanceLogRepository.save(newLog);
+
+		// find User EEE
+		Long newLogId = newLog.getId();
+		Optional<AttendanceLog> result = attendanceLogRepository.findById(newLogId);
+        assertTrue(!result.isEmpty());
+		
+        // Delete User EEE
+		attendanceLogRepository.deleteById(newLogId);
+		
+        result = attendanceLogRepository.findById(newLogId);
+        assertTrue(result.isEmpty());
 	}
 
 }

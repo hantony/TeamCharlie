@@ -1,8 +1,10 @@
 package com.umgc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,10 +50,10 @@ public class UserControllerTest {
 	@Autowired
 	UserRepository userRepository;
 
-	// static, all tests share this postgres container
+	// static, all tests share this mysql container
 	@Container
 	@ServiceConnection
-	static MySQLContainer<?> postgres = new MySQLContainer<>("mysql:8.0-debian");
+	static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0-debian");
 
 	@BeforeEach
 	void testSetUp() {
@@ -107,5 +109,26 @@ public class UserControllerTest {
 		assertEquals("StatusE", user.getStatus());
 
 	}
+	
+	@Test
+	public void testDeleteById() {
 
+		// Create a new User EEE
+
+		User newUser = new User("EEE", "RoleE", "CardE", "StatusE");
+		
+		userRepository.save(newUser);
+
+		// find User EEE
+		Long newUserId = newUser.getId();
+		Optional<User> result = userRepository.findById(newUserId);
+        assertTrue(!result.isEmpty());
+		
+        // Delete User EEE
+		userRepository.deleteById(newUserId);
+		
+        result = userRepository.findById(newUserId);
+        assertTrue(result.isEmpty());
+	}
+	
 }

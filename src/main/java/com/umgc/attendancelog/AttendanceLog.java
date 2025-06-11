@@ -14,8 +14,8 @@ public class AttendanceLog {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    private String userId;
-    private String entryTime;
+    private Long userId;
+    private Long entryTime;
     private String entryType;
     private String location;
     
@@ -23,7 +23,7 @@ public class AttendanceLog {
 		super();
 	}
 
-	public AttendanceLog(String userId, String entryTime, String entryType, String location) {
+	public AttendanceLog(Long userId, Long entryTime, String entryType, String location) {
 		super();
 		this.userId = userId;
 		this.entryTime = entryTime;
@@ -39,19 +39,19 @@ public class AttendanceLog {
 		this.id = id;
 	}
 
-	public String getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 
-	public String getEntryTime() {
+	public Long getEntryTime() {
 		return entryTime;
 	}
 
-	public void setEntryTime(String entryTime) {
+	public void setEntryTime(Long entryTime) {
 		this.entryTime = entryTime;
 	}
 

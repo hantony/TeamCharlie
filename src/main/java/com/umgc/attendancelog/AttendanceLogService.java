@@ -10,22 +10,22 @@ import org.springframework.stereotype.Service;
 public class AttendanceLogService {
 
     @Autowired
-    private AttendanceLogRepository userRepository;
+    private AttendanceLogRepository attendanceLogRepository;
 
     public List<AttendanceLog> findAll() {
-        return userRepository.findAll();
+        return attendanceLogRepository.findAll();
     }
 
     public Optional<AttendanceLog> findById(Long id) {
-        return userRepository.findById(id);
+        return attendanceLogRepository.findById(id);
     }
 
     public AttendanceLog save(AttendanceLog user) {
-        return userRepository.save(user);
+        return attendanceLogRepository.save(user);
     }
 
     public void deleteById(Long id) {
-        userRepository.deleteById(id);
+    	attendanceLogRepository.deleteById(id);
     }
 
    

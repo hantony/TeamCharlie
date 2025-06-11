@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 // Spring Data JPA creates CRUD implementation at runtime automatically.
 public interface AttendanceLogRepository extends JpaRepository<AttendanceLog, Long> {
 
-   List<AttendanceLog> findByUserId(String name);
+   List<AttendanceLog> findByUserId(Long userId);
 
 //   Custom query
 //       @Query("SELECT b FROM Book b WHERE b.publishDate > :date")
