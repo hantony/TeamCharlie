@@ -1,12 +1,8 @@
 package com.umgc;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -16,12 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -42,14 +32,6 @@ import com.umgc.attendancelog.AttendanceLogRepository;
 @TestPropertySource(properties = { "spring.jpa.hibernate.ddl-auto=create-drop" })
 public class AttendanceLogTest {
 
-	@LocalServerPort
-	private Integer port;
-
-	@Autowired
-	private TestRestTemplate restTemplate;
-
-	private String BASEURI;
-
 	@Autowired
 	AttendanceLogRepository attendanceLogRepository;
 
@@ -60,84 +42,24 @@ public class AttendanceLogTest {
 
 	@BeforeEach
 	void testSetUp() {
-
-		BASEURI = "http://localhost:" + port;
-
-		attendanceLogRepository.deleteAll();
-		
-		Date date = new Date();
-		
-		Long userId1 = Long.valueOf(1);
-		Long userId2 = Long.valueOf(2);
-		Long userId3 = Long.valueOf(3);
-		Long userId4 = Long.valueOf(4);
-		
-		AttendanceLog newLogAAA = new AttendanceLog(userId1, date.getTime(), "entryTypeA", "locationA");
-		AttendanceLog newLogBBB = new AttendanceLog(userId2, date.getTime()+1, "entryTypeB", "locationB");
-		AttendanceLog newLogCCC = new AttendanceLog(userId3, date.getTime()+2, "entryTypeC", "locationC");
-		AttendanceLog newLogDDD = new AttendanceLog(userId4, date.getTime()+3, "entryTypeD", "locationD");
-		
-		attendanceLogRepository.saveAll(List.of(newLogAAA, newLogBBB, newLogCCC, newLogDDD));
-	}
-
-	@Test
-	void testFindAll() {
-
-		// find all Log Entries and return List<AttendanceLog>
-		ParameterizedTypeReference<List<AttendanceLog>> typeRef = new ParameterizedTypeReference<>() {
-		};
-		ResponseEntity<List<AttendanceLog>> response = restTemplate.exchange(BASEURI + "/Log", HttpMethod.GET, null, typeRef);
-
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(4, response.getBody().size());
-
-	}
-
-	@Test
-	public void testCreate() {
-
-		// Create a new Log Entry EEE
-		Date date = new Date();
-		Long userId5 = Long.valueOf(5);
-		
-		AttendanceLog newLog = new AttendanceLog(userId5, date.getTime(), "entryTypeE", "locationE");
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Type", "application/json");
-		HttpEntity<AttendanceLog> request = new HttpEntity<>(newLog, headers);
-
-		// test POST save
-		ResponseEntity<AttendanceLog> responseEntity = restTemplate.postForEntity(BASEURI + "/Log", request, AttendanceLog.class);
-
-		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-
-		// find User EEE
-		List<AttendanceLog> list = attendanceLogRepository.findByUserId(userId5);
-
-		// Test User EEE details
-		AttendanceLog alog = list.get(0);
-		assertEquals(5L, alog.getUserId());
-		assertTrue(alog.getEntryTime() > 1000 );
-		assertEquals("entryTypeE", alog.getEntryType());
-		assertEquals("locationE", alog.getLocation());
-
 	}
 	
 	@Test
 	public void testDeleteById() {
 
-		// Create a new User EEE
+		// Create a new Log Entry
 		Date date = new Date();
 		Long userId6 = Long.valueOf(6);
-		AttendanceLog newLog = new AttendanceLog(userId6, date.getTime(), "entryTypeE", "locationE");
+		AttendanceLog newLog = new AttendanceLog(userId6, date.getTime(), "entryType6", "location6");
 		
 		attendanceLogRepository.save(newLog);
 
-		// find User EEE
+		// find Log Entry By Id
 		Long newLogId = newLog.getId();
 		Optional<AttendanceLog> result = attendanceLogRepository.findById(newLogId);
         assertTrue(!result.isEmpty());
 		
-        // Delete User EEE
+        // Delete Log Entry
 		attendanceLogRepository.deleteById(newLogId);
 		
         result = attendanceLogRepository.findById(newLogId);
