@@ -22,6 +22,8 @@ $ ./mvnw clean package -Dmaven.test.skip=true
 
 $ ./mvnw spring-boot:run
 
+## How to generate surefire reports
+mvn surefire-report:report
 ```
 
 
