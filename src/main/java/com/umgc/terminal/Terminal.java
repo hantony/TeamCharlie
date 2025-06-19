@@ -49,12 +49,6 @@ public class Terminal {
 	}
 
 
-	@Override
-	public String toString() {
-		return "Terminal [id=" + id + ", location=" + location + ", getId()=" + getId() + ", getLocation()="
-				+ getLocation() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
-				+ super.toString() + "]";
-	}
-
+	
 }
 

@@ -51,20 +51,28 @@ public class StartApplication {
     @Bean
     public CommandLineRunner initialAttendanceLogEntries(AttendanceLogRepository attendanceLogRepository) {
         return (args) -> {
+        	
         	Date date = new Date();
+        	
         	Long userId1 = Long.valueOf(1);
         	Long userId2 = Long.valueOf(2);
         	Long userId3 = Long.valueOf(3);
         	Long userId4 = Long.valueOf(4);
         	
-            AttendanceLog alog1 = new AttendanceLog(userId1, date.getTime(), "IN", "Main Gate");
-            AttendanceLog alog2 = new AttendanceLog(userId1, date.getTime()+1, "IN", "Main Gate");
-            AttendanceLog alog3 = new AttendanceLog(userId2, date.getTime()+2, "IN", "Admin Entrance");
-            AttendanceLog alog4 = new AttendanceLog(userId3, date.getTime()+3, "IN", "Service Door");
-            AttendanceLog alog5 = new AttendanceLog(userId4, date.getTime()+4, "IN", "Main Gate");
+        	Long terminalId1 = Long.valueOf(1);
+    		Long terminalId2 = Long.valueOf(2);
+    		Long terminalId3 = Long.valueOf(3);
+    		Long terminalId4 = Long.valueOf(4);
+    		
+    		AttendanceLog newLog1 = new AttendanceLog(userId1, terminalId1, date.getTime(), "entryTypeA", "Main Gate");
+    		AttendanceLog newLog2 = new AttendanceLog(userId2, terminalId2, date.getTime()+1, "entryTypeB", "Main Gate");
+    		AttendanceLog newLog3 = new AttendanceLog(userId3, terminalId3, date.getTime()+2, "entryTypeC", "Admin Entrance");
+    		AttendanceLog newLog4 = new AttendanceLog(userId4, terminalId4, date.getTime()+3, "entryTypeD", "Service Door");
+    		AttendanceLog newLog5 = new AttendanceLog(userId4, terminalId4, date.getTime()+3, "entryTypeD", "Main Gate");
+        	
            
             // save a few users, ID auto increase, expect 1, 2, 3, 4
-            attendanceLogRepository.saveAll(List.of(alog1, alog2, alog3, alog4, alog5));
+            attendanceLogRepository.saveAll(List.of(newLog1, newLog2, newLog3, newLog4, newLog5));
             // find all log entries
             log.info("-------------------------------");
             log.info("findAll(), expect 5 log entries");

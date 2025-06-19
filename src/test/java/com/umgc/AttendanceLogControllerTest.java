@@ -69,10 +69,15 @@ public class AttendanceLogControllerTest {
 		Long userId3 = Long.valueOf(3);
 		Long userId4 = Long.valueOf(4);
 		
-		AttendanceLog newLog1 = new AttendanceLog(userId1, date.getTime(), "entryTypeA", "locationA");
-		AttendanceLog newLog2 = new AttendanceLog(userId2, date.getTime()+1, "entryTypeB", "locationB");
-		AttendanceLog newLog3 = new AttendanceLog(userId3, date.getTime()+2, "entryTypeC", "locationC");
-		AttendanceLog newLog4 = new AttendanceLog(userId4, date.getTime()+3, "entryTypeD", "locationD");
+		Long terminalId1 = Long.valueOf(1);
+		Long terminalId2 = Long.valueOf(2);
+		Long terminalId3 = Long.valueOf(3);
+		Long terminalId4 = Long.valueOf(4);
+		
+		AttendanceLog newLog1 = new AttendanceLog(userId1, terminalId1, date.getTime(), "entryTypeA", "locationA");
+		AttendanceLog newLog2 = new AttendanceLog(userId2, terminalId2, date.getTime()+1, "entryTypeB", "locationB");
+		AttendanceLog newLog3 = new AttendanceLog(userId3, terminalId3, date.getTime()+2, "entryTypeC", "locationC");
+		AttendanceLog newLog4 = new AttendanceLog(userId4, terminalId4, date.getTime()+3, "entryTypeD", "locationD");
 		
 		attendanceLogRepository.saveAll(List.of(newLog1, newLog2, newLog3, newLog4));
 	}
@@ -96,8 +101,9 @@ public class AttendanceLogControllerTest {
 		// Create a new Log Entry
 		Date date = new Date();
 		Long userId5 = Long.valueOf(5);
+		Long terminalId5 = Long.valueOf(5);
 		
-		AttendanceLog newLog = new AttendanceLog(userId5, date.getTime(), "entryType5", "location5");
+		AttendanceLog newLog = new AttendanceLog(userId5, terminalId5, date.getTime(), "entryType5", "location5");
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json");
 		HttpEntity<AttendanceLog> request = new HttpEntity<>(newLog, headers);
